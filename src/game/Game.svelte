@@ -3,7 +3,7 @@
     import Over from '../over/Over.svelte';
 
     import { fly, crossfade } from 'svelte/transition';
-    import * as eases from 'svelte/easing';
+    import { cubicOut } from 'svelte/easing';
 
     export let actor = null;
     const { send } = actor;
@@ -13,7 +13,7 @@
     $: [a, b] = rounds[currentRoundIndex];
 
     const [sendFade, receiveFade] = crossfade({
-        easing: eases.cubicOut,
+        easing: cubicOut,
         duration: 300
     });
 </script>

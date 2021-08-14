@@ -9,6 +9,7 @@
 
     import { useMachine } from '@xstate/svelte';
     import { machine } from './machine.js';
+
     const { state, service } = useMachine(machine);
     log(service);
 

@@ -1,6 +1,6 @@
 <script>
     import { scale } from 'svelte/transition';
-    import * as eases from 'svelte/easing';
+    import { elasticOut } from 'svelte/easing';
 
     import { pickRandom } from '../utils.js';
 
@@ -28,7 +28,7 @@
     };
 </script>
 
-<div class="done" in:scale={{ delay: 200, duration: 800, easing: eases.elasticOut }}>
+<div class="done" in:scale={{ delay: 200, duration: 800, easing: elasticOut }}>
     <strong>{score}/{results.length}</strong>
     <p>{pickMessage(score / results.length)}</p>
     <button on:click={() => send('restart')}>Back to main screen</button>
