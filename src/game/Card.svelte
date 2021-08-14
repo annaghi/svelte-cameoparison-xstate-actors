@@ -1,13 +1,13 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
+
     import { scale } from 'svelte/transition';
     import { elasticOut } from 'svelte/easing';
 
     export let celeb;
     export let showprice;
     export let winner;
-
-    const dispatch = createEventDispatcher();
 </script>
 
 <div class="card-outer">

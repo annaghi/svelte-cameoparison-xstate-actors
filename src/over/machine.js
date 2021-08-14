@@ -1,20 +1,20 @@
 import { createMachine, sendParent } from 'xstate';
 
-export const errorMachine = (targetState) =>
+export const overMachine = (results) =>
     createMachine({
-        id: 'errorActor',
+        id: 'overActor',
         context: {
-            targetState: targetState
+            results: results
         },
 
         initial: 'idle',
         states: {
             idle: {
                 on: {
-                    retry: {
+                    restart: {
                         actions: sendParent((context, event) => ({
-                            type: 'retry',
-                            targetState: context.targetState
+                            type: 'restart',
+                            results: context.results
                         }))
                     }
                 }

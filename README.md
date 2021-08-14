@@ -1,11 +1,7 @@
 # CameoParison example - Actors
 
-This is an XState port of [Rich-Harris/cameoparison-starter](https://github.com/Rich-Harris/cameoparison-starter)
-
-The related course on Frontend Masters can be found here:
-
-- full course: https://frontendmasters.com/courses/svelte/
-- build the app: https://frontendmasters.com/courses/svelte/building-an-application-frame/
+This is an XState port of [Rich-Harris/cameoparison-starter](https://github.com/Rich-Harris/cameoparison-starter).
+You can check out the [course on Frontend Masters](https://frontendmasters.com/courses/svelte/building-an-application-frame/).
 
 [Open in CodeSandbox](https://codesandbox.io/embed/github/annaghi/xstate-cameoparison-svelte-actors)
 

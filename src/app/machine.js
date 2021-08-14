@@ -1,8 +1,8 @@
-import { assign, createMachine, send, spawn, actions } from 'xstate';
+import { assign, createMachine, spawn, actions } from 'xstate';
 const { stop } = actions;
 
-import { welcomeMachine } from './welcome/machine.js';
-import { gameMachine } from './game/machine.js';
+import { welcomeMachine } from '../welcome/machine.js';
+import { gameMachine } from '../game/machine.js';
 
 export const machine = createMachine({
     id: 'appMachine',
@@ -17,7 +17,7 @@ export const machine = createMachine({
     states: {
         welcome: {
             on: {
-                start: {
+                play: {
                     target: 'game',
                     actions: assign({
                         gameActor: (context, event) => spawn(gameMachine(event.rounds), 'gameActor')

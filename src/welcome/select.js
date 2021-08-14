@@ -1,4 +1,4 @@
-import { pick_random } from '../utils.js';
+import { pickRandom } from '../utils.js';
 
 function remove(array, index) {
     // if a 'similar' account was picked, there's no
@@ -34,13 +34,13 @@ export function select(celebs, lookup, category, ROUNDS_PER_GAME) {
         // if this celeb has 'similar' celebs, decide whether to pick one
         const similar = a.similar.filter((id) => !seen.has(id));
         if (similar.length > 0 && Math.random() < 0.75) {
-            const id = pick_random(similar);
+            const id = pickRandom(similar);
             b = lookup.get(id);
         }
 
         // otherwise pick someone at random
         else {
-            b = pick_random(filtered);
+            b = pickRandom(filtered);
         }
 
         selection.push({ a, b });

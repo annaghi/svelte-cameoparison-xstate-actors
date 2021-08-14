@@ -1,6 +1,8 @@
-import { assign, createMachine, sendParent } from 'xstate';
+import { assign, createMachine, sendParent, spawn } from 'xstate';
 
-export const ROUNDS_PER_GAME = 10;
+import { overMachine } from '../over/machine.js';
+
+import { ROUNDS_PER_GAME } from '../constants.js';
 
 export const gameMachine = (rounds) =>
     createMachine({
@@ -9,8 +11,10 @@ export const gameMachine = (rounds) =>
             rounds: rounds,
             currentRoundIndex: 0,
             results: Array(ROUNDS_PER_GAME),
-            currentResult: undefined
+            currentResult: undefined,
+            overActor: undefined
         },
+
         initial: 'question',
         states: {
             question: {
@@ -48,16 +52,20 @@ export const gameMachine = (rounds) =>
                                 currentRoundIndex: (context, event) => context.currentRoundIndex + 1
                             })
                         },
-                        { target: 'over' }
+                        {
+                            target: 'over',
+                            actions: assign({
+                                overActor: (context, event) => spawn(overMachine(context.results), 'overActor')
+                            })
+                        }
                     ]
                 }
             },
             over: {
                 on: {
-                    back: {
-                        actions: sendParent({ type: 'restart' })
-                    }
-                }
+                    restart: { actions: sendParent({ type: 'restart' }) }
+                },
+                exit: stop('overActor')
             }
         }
     });

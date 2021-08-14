@@ -1,11 +1,11 @@
-import { assign, createMachine, sendParent, spawn, actions } from 'xstate';
+import { actions, assign, createMachine, sendParent, spawn } from 'xstate';
 const { stop } = actions;
 
-import { ROUNDS_PER_GAME } from '../game/machine.js';
 import { errorMachine } from '../error/machine.js';
 
+import { ROUNDS_PER_GAME } from '../constants.js';
 import { select } from './select.js';
-import { load_image } from '../utils.js';
+import { loadImage } from '../utils.js';
 
 const loadCelebs = async () => {
     const res = await fetch('https://cameo-explorer.netlify.app/celebs.json');
@@ -43,7 +43,7 @@ const loadCelebPair = (round) => {
 const loadCelebDetails = async (celeb) => {
     const res = await fetch(`https://cameo-explorer.netlify.app/celebs/${celeb.id}.json`);
     const details = await res.json();
-    await load_image(details.image);
+    await loadImage(details.image);
     return details;
 };
 
@@ -84,13 +84,7 @@ export const welcomeMachine = createMachine({
                 onError: {
                     target: 'error',
                     actions: assign({
-                        errorActor: (context, event) =>
-                            spawn(
-                                errorMachine.withContext({
-                                    targetState: 'loadingCelebs'
-                                }),
-                                'errorActor'
-                            )
+                        errorActor: (context, event) => spawn(errorMachine('loadingCelebs'), 'errorActor')
                     })
                 }
             }
@@ -101,18 +95,12 @@ export const welcomeMachine = createMachine({
                     loadRounds(select(context.celebs, context.lookup, context.selectedCategory.slug, ROUNDS_PER_GAME)),
                 onDone: {
                     target: 'idle',
-                    actions: sendParent((context, event) => ({ type: 'start', rounds: event.data }))
+                    actions: sendParent((context, event) => ({ type: 'play', rounds: event.data }))
                 },
                 onError: {
                     target: 'error',
                     actions: assign({
-                        errorActor: (context, event) =>
-                            spawn(
-                                errorMachine.withContext({
-                                    targetState: 'idle'
-                                }),
-                                'errorActor'
-                            )
+                        errorActor: (context, event) => spawn(errorMachine('idle'), 'errorActor')
                     })
                 }
             }
