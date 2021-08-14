@@ -63,7 +63,9 @@ export const gameMachine = (rounds) =>
             },
             over: {
                 on: {
-                    restart: { actions: sendParent({ type: 'restart' }) }
+                    restart: {
+                        actions: sendParent({ type: 'greet' })
+                    }
                 },
                 exit: stop('overActor')
             }
