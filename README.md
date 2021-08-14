@@ -14,3 +14,7 @@ You can check out the [course on Frontend Masters](https://frontendmasters.com/c
 1. `pnpm install`
 2. `pnpm run dev`
 3. Open http://localhost:3000
+
+## Actor-model
+
+![](cameoparison-actor-model.svg)
