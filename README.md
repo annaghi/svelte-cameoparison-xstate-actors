@@ -17,7 +17,7 @@ You can check out the [course on Frontend Masters](https://frontendmasters.com/c
 
 ## Actor-model
 
-![](cameoparison-actor-model.svg)
+![](cameoparison-actor-model.png)
 
 ```mermaid
 graph TD;
