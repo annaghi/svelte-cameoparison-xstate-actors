@@ -3,10 +3,6 @@ const { stop } = actions;
 
 import { errorMachine } from '../error/machine.js';
 
-import { ROUNDS_PER_GAME } from '../constants.js';
-import { select } from './select.js';
-import { loadImage } from '../utils.js';
-
 const loadCelebs = async () => {
     const res = await fetch('https://cameo-explorer.netlify.app/celebs.json');
     const data = await res.json();
@@ -32,42 +28,30 @@ const loadCelebs = async () => {
     };
 };
 
-const loadRounds = (selection) => {
-    return Promise.all(selection.map((round) => loadCelebPair(round)));
-};
-
-const loadCelebPair = (round) => {
-    return Promise.all([loadCelebDetails(round.a), loadCelebDetails(round.b)]);
-};
-
-const loadCelebDetails = async (celeb) => {
-    const res = await fetch(`https://cameo-explorer.netlify.app/celebs/${celeb.id}.json`);
-    const details = await res.json();
-    await loadImage(details.image);
-    return details;
-};
-
 export const welcomeMachine = createMachine({
     id: 'welcomeActor',
     context: {
         celebs: [],
         lookup: undefined,
-        selectedCategory: undefined,
         errorActor: undefined
     },
 
     initial: 'idle',
     states: {
         idle: {
-            entry: assign({ selectedCategory: undefined }),
             on: {
-                loadCelebs: 'loadingCelebs',
-                selectCategory: {
+                LOAD_CELEBS: 'loadingCelebs',
+                SELECT_CATEGORY: {
                     cond: (context, event) => context.celebs.length > 0 && context?.lookup,
-                    target: 'loadingRounds',
-                    actions: assign({
-                        selectedCategory: (context, event) => event.category
-                    })
+                    actions: sendParent((context, event) => ({
+                        type: 'PLAY',
+                        data: {
+                            filteredCelebs: context.celebs.filter((celeb) =>
+                                celeb.categories.includes(event.category.slug)
+                            ),
+                            lookup: context.lookup
+                        }
+                    }))
                 }
             }
         },
@@ -82,52 +66,18 @@ export const welcomeMachine = createMachine({
                     })
                 },
                 onError: {
-                    target: 'error',
+                    target: 'failure',
                     actions: assign({
                         errorActor: (context, event) => spawn(errorMachine('loadingCelebs'), 'errorActor')
                     })
                 }
             }
         },
-        loadingRounds: {
-            invoke: {
-                src: (context, event) =>
-                    loadRounds(select(context.celebs, context.lookup, context.selectedCategory.slug, ROUNDS_PER_GAME)),
-                onDone: {
-                    target: 'idle',
-                    actions: sendParent((context, event) => ({ type: 'play', rounds: event.data }))
-                },
-                onError: {
-                    target: 'error',
-                    actions: assign({
-                        errorActor: (context, event) => spawn(errorMachine('idle'), 'errorActor')
-                    })
-                }
-            }
-        },
-
-        error: {
+        failure: {
             on: {
-                retry: [
-                    {
-                        cond: (context, event) => event.targetState === 'loadingCelebs',
-                        target: 'loadingCelebs'
-                    },
-                    {
-                        cond: (context, event) => event.targetState === 'idle',
-                        target: 'idle'
-                    }
-                ]
+                RETRY: 'loadingCelebs'
             },
             exit: stop('errorActor')
         }
-        // error: {
-        //     on: {
-        //         retry: {
-        //             target: (context, event) => event.targetState
-        //         }
-        //     },
-        //     exit: stop('errorActor')
-        // }
     }
 });

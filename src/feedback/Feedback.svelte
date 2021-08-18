@@ -31,7 +31,7 @@
 <div class="done" in:scale={{ delay: 200, duration: 800, easing: elasticOut }}>
     <strong>{score}/{results.length}</strong>
     <p>{pickMessage(score / results.length)}</p>
-    <button on:click={() => send('restart')}>Back to main screen</button>
+    <button on:click={() => send('RESTART')}>Back to main screen</button>
 </div>
 
 <style>

@@ -12,22 +12,18 @@ function remove(array, index) {
     array.pop();
 }
 
-export function select(celebs, lookup, category, ROUNDS_PER_GAME) {
-    const filtered = celebs.filter((c) => {
-        return c.categories.includes(category);
-    });
-
+export function select(celebs, lookup, ROUNDS_PER_GAME) {
     const seen = new Set();
     const selection = [];
 
     let i = ROUNDS_PER_GAME;
     while (i--) {
         const n = Math.random();
-        const ai = Math.floor(n * filtered.length);
-        const a = filtered[ai];
+        const ai = Math.floor(n * celebs.length);
+        const a = celebs[ai];
 
         // remove a from the array so this person can't be picked again
-        remove(filtered, ai);
+        remove(celebs, ai);
 
         let b;
 
@@ -40,7 +36,7 @@ export function select(celebs, lookup, category, ROUNDS_PER_GAME) {
 
         // otherwise pick someone at random
         else {
-            b = pickRandom(filtered);
+            b = pickRandom(celebs);
         }
 
         selection.push({ a, b });
@@ -49,7 +45,7 @@ export function select(celebs, lookup, category, ROUNDS_PER_GAME) {
         seen.add(b.id);
 
         // remove b from the array so this person can't be picked again
-        remove(filtered, filtered.indexOf(b));
+        remove(celebs, celebs.indexOf(b));
     }
 
     return selection;

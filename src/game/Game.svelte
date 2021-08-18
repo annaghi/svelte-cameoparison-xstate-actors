@@ -1,6 +1,9 @@
 <script>
     import Card from './Card.svelte';
-    import Over from '../over/Over.svelte';
+    import Feedback from '../feedback/Feedback.svelte';
+    import Error from '../error/Error.svelte';
+
+    import { onMount } from 'svelte';
 
     import { fly, crossfade } from 'svelte/transition';
     import { cubicOut } from 'svelte/easing';
@@ -8,63 +11,67 @@
     export let actor = null;
     const { send } = actor;
 
-    $: ({ rounds, currentRoundIndex, results, currentResult, overActor } = $actor.context);
+    $: ({ currentRound, results, currentResult, feedbackActor, errorActor } = $actor.context);
 
-    $: [a, b] = rounds[currentRoundIndex];
+    $: [a, b] = currentRound;
 
     const [sendFade, receiveFade] = crossfade({
         easing: cubicOut,
         duration: 300
     });
+
+    onMount(() => {
+        send('LOAD_ROUNDS');
+    });
 </script>
 
-{#if !$actor.matches('over')}
+{#if !$actor.matches('feedback')}
     <header>
         <p>Tap on the more monetisable celebrity's face, or tap 'same price' if society values them equally.</p>
     </header>
 {/if}
 
 <div class="game-container">
-    {#if !$actor.matches('over')}
-        {#key a.id || b.id}
-            <div in:fly={{ duration: 300, y: 20 }} out:fly={{ duration: 300, y: -20 }} class="game">
-                <div class="card-container">
-                    <Card
-                        celeb={a}
-                        showprice={$actor.matches('result')}
-                        winner={a.price >= b.price}
-                        on:select={() => send({ type: 'answer', a, b, sign: 1 })}
-                    />
-                </div>
-
-                <div>
-                    <button class="same" on:click={() => send({ type: 'answer', a, b, sign: 0 })}>same price</button>
-                </div>
-
-                <div class="card-container">
-                    <Card
-                        celeb={b}
-                        showprice={$actor.matches('result')}
-                        winner={b.price >= a.price}
-                        on:select={() => send({ type: 'answer', a, b, sign: -1 })}
-                    />
-                </div>
+    {#if $actor.matches('question') || $actor.matches('answer') || $actor.matches('next')}
+        <div in:fly={{ duration: 300, y: 50 }} out:fly={{ duration: 300, y: -50 }} class="game">
+            <div class="card-container">
+                <Card
+                    celeb={a}
+                    showprice={$actor.matches('answer')}
+                    winner={a.price >= b.price}
+                    on:select={() => send({ type: 'ATTEMPT', a, b, sign: 1 })}
+                />
             </div>
-        {/key}
-    {:else if $actor.matches('over')}
-        <Over actor={overActor} />
+
+            <div>
+                <button class="same" on:click={() => send({ type: 'ATTEMPT', a, b, sign: 0 })}>same price</button>
+            </div>
+
+            <div class="card-container">
+                <Card
+                    celeb={b}
+                    showprice={$actor.matches('answer')}
+                    winner={b.price >= a.price}
+                    on:select={() => send({ type: 'ATTEMPT', a, b, sign: -1 })}
+                />
+            </div>
+        </div>
+
+        {#if $actor.matches('answer')}
+            <img
+                in:fly={{ duration: 200, y: -100 }}
+                out:sendFade={{ key: currentResult }}
+                class="giant-result"
+                alt="{currentResult} answer"
+                src="/icons/{currentResult}.svg"
+            />
+        {/if}
+    {:else if $actor.matches('feedback')}
+        <Feedback actor={feedbackActor} />
+    {:else if $actor.matches('failure')}
+        <Error actor={errorActor} />
     {/if}
 </div>
-
-{#if $actor.matches('result')}
-    <img
-        in:fly={{ duration: 200, x: 100 }}
-        out:sendFade={{ key: currentResult }}
-        class="giant-result"
-        alt="{currentResult} answer"
-        src="/icons/{currentResult}.svg"
-    />
-{/if}
 
 <div class="results" style="grid-template-columns: repeat({results.length}, 1fr)">
     {#each results as result}

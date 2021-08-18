@@ -17,16 +17,16 @@ export const machine = createMachine({
     states: {
         welcome: {
             on: {
-                play: {
+                PLAY: {
                     target: 'game',
                     actions: assign({
-                        gameActor: (context, event) => spawn(gameMachine(event.rounds), 'gameActor')
+                        gameActor: (context, event) => spawn(gameMachine(event.data), 'gameActor')
                     })
                 }
             }
         },
         game: {
-            on: { greet: 'welcome' },
+            on: { GREET: 'welcome' },
             exit: stop('gameActor')
         }
     }

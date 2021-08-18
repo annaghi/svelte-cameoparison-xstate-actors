@@ -2,9 +2,10 @@
     import Error from '../error/Error.svelte';
 
     export let actor = null;
+    export let parent = null;
     const { send } = actor;
 
-    $: ({ selectedCategory, errorActor } = $actor.context);
+    $: ({ errorActor } = $actor.context);
 
     const categories = [
         { slug: 'actors', label: 'Actors' },
@@ -17,7 +18,7 @@
     ];
 </script>
 
-{#if !$actor.matches('error')}
+{#if !$actor.matches('failure')}
     <header>
         <h1>CameoP<span class="logo">a</span>rison</h1>
         <p>
@@ -32,15 +33,15 @@
     <div class="categories">
         {#each categories as category}
             <button
-                disabled={$actor.matches('loadingCelebs') || $actor.matches('loadingRounds')}
-                class:loading={$actor.matches('loadingCelebs') || selectedCategory === category}
-                on:click={() => send({ type: 'selectCategory', category })}
+                disabled={$actor.matches('loadingCelebs')}
+                class:loading={$actor.matches('loadingCelebs')}
+                on:click={() => send({ type: 'SELECT_CATEGORY', category, parent })}
             >
                 {category.label}
             </button>
         {/each}
     </div>
-{:else if $actor.matches('error')}
+{:else if $actor.matches('failure')}
     <Error actor={errorActor} />
 {/if}
 

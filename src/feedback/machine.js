@@ -1,8 +1,8 @@
 import { createMachine, sendParent } from 'xstate';
 
-export const overMachine = (results) =>
+export const feedbackMachine = (results) =>
     createMachine({
-        id: 'overActor',
+        id: 'feedbackActor',
         context: {
             results: results
         },
@@ -11,8 +11,8 @@ export const overMachine = (results) =>
         states: {
             idle: {
                 on: {
-                    restart: {
-                        actions: sendParent({ type: 'restart' })
+                    RESTART: {
+                        actions: sendParent({ type: 'RESTART' })
                     }
                 }
             }

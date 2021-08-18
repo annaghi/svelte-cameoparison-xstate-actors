@@ -18,13 +18,3 @@ You can check out the [course on Frontend Masters](https://frontendmasters.com/c
 ## Actor-model
 
 ![](cameoparison-actor-model.png)
-
-```mermaid
-graph TD;
-
-A((A));
-A --> W((W));
-A --> G((G));
-W --> |2|E((E));
-G --> O((O));
-```

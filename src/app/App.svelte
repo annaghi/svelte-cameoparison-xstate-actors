@@ -5,18 +5,19 @@
     import { onMount } from 'svelte';
 
     import { loadImage } from '../utils.js';
-    import { log } from '../logger.js';
 
     import { useMachine } from '@xstate/svelte';
     import { machine } from './machine.js';
+
+    import { log } from '../logger.js';
 
     const { state, service } = useMachine(machine);
     log(service);
 
     $: ({ welcomeActor, gameActor } = $state.context);
 
-    $: onMount(() => {
-        welcomeActor.send('loadCelebs');
+    onMount(() => {
+        welcomeActor.send('LOAD_CELEBS');
         loadImage('/icons/right.svg');
         loadImage('/icons/wrong.svg');
     });
@@ -24,7 +25,7 @@
 
 <main>
     {#if $state.matches('welcome')}
-        <Welcome actor={welcomeActor} />
+        <Welcome actor={welcomeActor} parent={service} />
     {:else if $state.matches('game')}
         <Game actor={gameActor} />
     {/if}
