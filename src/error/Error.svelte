@@ -3,21 +3,11 @@
     const { send } = actor;
 </script>
 
-<div class="error">
-    <p class="message">Server or network error</p>
-    <button on:click={() => send('RETRY')}>Try again</button>
-</div>
+<p class="error">Server or network error</p>
+<button on:click={() => send('RETRY')}>Try again</button>
 
 <style>
     .error {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .message {
         color: red;
     }
     button {

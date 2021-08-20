@@ -8,9 +8,7 @@ export const errorMachine = createMachine({
         idle: {
             on: {
                 RETRY: {
-                    actions: sendParent((context, event) => ({
-                        type: 'RETRY'
-                    }))
+                    actions: sendParent('RETRY')
                 }
             }
         }

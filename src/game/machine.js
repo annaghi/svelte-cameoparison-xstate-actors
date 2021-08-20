@@ -1,4 +1,5 @@
-import { assign, createMachine, sendParent, spawn } from 'xstate';
+import { actions, assign, createMachine, sendParent, spawn } from 'xstate';
+const { stop } = actions;
 
 import { feedbackMachine } from '../feedback/machine.js';
 import { errorMachine } from '../error/machine.js';
@@ -17,12 +18,13 @@ const loadCelebDetails = async (celeb) => {
     return details;
 };
 
-export const gameMachine = ({ filteredCelebs, lookup }) =>
+export const gameMachine = ({ celebs, lookup, category }) =>
     createMachine({
         id: 'gameActor',
         context: {
-            filteredCelebs: filteredCelebs,
+            celebs: celebs,
             lookup: lookup,
+            category: category,
             rounds: [],
             currentRound: [],
             currentRoundIndex: 0,
@@ -42,20 +44,14 @@ export const gameMachine = ({ filteredCelebs, lookup }) =>
             loadingRounds: {
                 invoke: {
                     src: (context, event) =>
-                        loadRounds(select(context.filteredCelebs, context.lookup, ROUNDS_PER_GAME)),
+                        loadRounds(select(context.celebs, context.lookup, context.category.slug, ROUNDS_PER_GAME)),
                     onDone: {
-                        target: 'loadingRound',
+                        target: 'loadingCelebDetails',
                         actions: assign({ rounds: (context, event) => event.data })
-                    },
-                    onError: {
-                        target: 'failure',
-                        actions: assign({
-                            errorActor: (context, event) => spawn(errorMachine, 'errorActor')
-                        })
                     }
                 }
             },
-            loadingRound: {
+            loadingCelebDetails: {
                 invoke: {
                     src: (context, event) => context.rounds[context.currentRoundIndex].then((round) => round),
                     onDone: {
@@ -100,7 +96,7 @@ export const gameMachine = ({ filteredCelebs, lookup }) =>
                     500: [
                         {
                             cond: (context, event) => context.currentRoundIndex < ROUNDS_PER_GAME - 1,
-                            target: 'loadingRound',
+                            target: 'loadingCelebDetails',
                             actions: assign({
                                 currentRoundIndex: (context, event) => context.currentRoundIndex + 1
                             })
@@ -118,16 +114,14 @@ export const gameMachine = ({ filteredCelebs, lookup }) =>
             feedback: {
                 on: {
                     RESTART: {
-                        actions: sendParent({ type: 'GREET' })
+                        actions: sendParent('GREET')
                     }
                 },
                 exit: stop('feedbackActor')
             },
             failure: {
                 on: {
-                    RETRY: {
-                        actions: sendParent({ type: 'GREET' })
-                    }
+                    RETRY: 'loadingRounds'
                 },
                 exit: stop('errorActor')
             }

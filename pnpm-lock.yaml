@@ -3,7 +3,6 @@ lockfileVersion: 5.3
 specifiers:
   '@sveltejs/vite-plugin-svelte': ^1.0.0-next.17
   '@tsconfig/svelte': ^2.0.1
-  '@xstate/svelte': ^0.1.0
   svelte: ^3.42.1
   svelte-check: ^2.2.4
   svelte-preprocess: ^4.7.4
@@ -13,7 +12,6 @@ specifiers:
   xstate: ^4.23.1
 
 dependencies:
-  '@xstate/svelte': 0.1.0_svelte@3.42.1+xstate@4.23.1
   xstate: 4.23.1
 
 devDependencies:
@@ -63,8 +61,8 @@ packages:
     resolution: {integrity: sha512-aqkICXbM1oX5FfgZd2qSSAGdyo/NRxjWCamxoyi3T8iVQnzGge19HhDYzZ6NrVOW7bhcWNSq9XexWFtMzbB24A==}
     dev: true
 
-  /@types/node/16.6.1:
-    resolution: {integrity: sha512-Sr7BhXEAer9xyGuCN3Ek9eg9xPviCF2gfu9kTfuU2HkTVAMYSDeX40fvpmo72n5nansg3nsBjuQBrsS28r+NUw==}
+  /@types/node/16.6.2:
+    resolution: {integrity: sha512-LSw8TZt12ZudbpHc6EkIyDM3nHVWKYrAvGy6EAJfNfjusbwnThqjqxUKKRwuV3iWYeW/LYMzNgaq3MaLffQ2xA==}
     dev: true
 
   /@types/pug/2.0.5:
@@ -74,24 +72,8 @@ packages:
   /@types/sass/1.16.1:
     resolution: {integrity: sha512-iZUcRrGuz/Tbg3loODpW7vrQJkUtpY2fFSf4ELqqkApcS2TkZ1msk7ie8iZPB86lDOP8QOTTmuvWjc5S0R9OjQ==}
     dependencies:
-      '@types/node': 16.6.1
+      '@types/node': 16.6.2
     dev: true
-
-  /@xstate/svelte/0.1.0_svelte@3.42.1+xstate@4.23.1:
-    resolution: {integrity: sha512-m4rM5W9LlZjj8t3YqI9biWd6wPkDe/i2imYy0+NoJBIovQ7rpWFyG73UtR/DbIuuxIDQLzPSPPEUdwhng2qiTw==}
-    peerDependencies:
-      '@xstate/fsm': ^1.0.0
-      svelte: ^3.24.1
-      xstate: ^4.11.0
-    peerDependenciesMeta:
-      '@xstate/fsm':
-        optional: true
-      xstate:
-        optional: true
-    dependencies:
-      svelte: 3.42.1
-      xstate: 4.23.1
-    dev: false
 
   /ansi-styles/4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
@@ -195,8 +177,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /esbuild/0.12.20:
-    resolution: {integrity: sha512-u7+0qTo9Z64MD9PhooEngCmzyEYJ6ovFhPp8PLNh3UasR5Ihjv6HWVXqm8uHmasdQlpsAf0IsY4U0YVUfCpt4Q==}
+  /esbuild/0.12.21:
+    resolution: {integrity: sha512-7hyXbU3g94aREufI/5nls7Xcc+RGQeZWZApm6hoBaFvt2BPtpT4TjFMQ9Tb1jU8XyBGz00ShmiyflCogphMHFQ==}
     hasBin: true
     requiresBuild: true
     dev: true
@@ -567,7 +549,7 @@ packages:
     engines: {node: '>=12.2.0'}
     hasBin: true
     dependencies:
-      esbuild: 0.12.20
+      esbuild: 0.12.21
       postcss: 8.3.6
       resolve: 1.20.0
       rollup: 2.56.2

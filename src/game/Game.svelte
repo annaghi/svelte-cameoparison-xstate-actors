@@ -33,7 +33,7 @@
 
 <div class="game-container">
     {#if $actor.matches('question') || $actor.matches('answer') || $actor.matches('next')}
-        <div in:fly={{ duration: 300, y: 50 }} out:fly={{ duration: 300, y: -50 }} class="game">
+        <div in:fly={{ duration: 300, y: 40 }} out:fly={{ duration: 300, y: -40 }} class="game">
             <div class="card-container">
                 <Card
                     celeb={a}
@@ -69,7 +69,9 @@
     {:else if $actor.matches('feedback')}
         <Feedback actor={feedbackActor} />
     {:else if $actor.matches('failure')}
-        <Error actor={errorActor} />
+        <div class="error-container">
+            <Error actor={errorActor} />
+        </div>
     {/if}
 </div>
 
@@ -139,6 +141,14 @@
         height: 100%;
         left: 0;
         top: 0;
+    }
+    .error-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     @media (min-width: 640px) {
         .game {

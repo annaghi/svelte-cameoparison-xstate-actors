@@ -46,10 +46,9 @@ export const welcomeMachine = createMachine({
                     actions: sendParent((context, event) => ({
                         type: 'PLAY',
                         data: {
-                            filteredCelebs: context.celebs.filter((celeb) =>
-                                celeb.categories.includes(event.category.slug)
-                            ),
-                            lookup: context.lookup
+                            celebs: context.celebs,
+                            lookup: context.lookup,
+                            category: event.category
                         }
                     }))
                 }
@@ -68,7 +67,7 @@ export const welcomeMachine = createMachine({
                 onError: {
                     target: 'failure',
                     actions: assign({
-                        errorActor: (context, event) => spawn(errorMachine('loadingCelebs'), 'errorActor')
+                        errorActor: (context, event) => spawn(errorMachine, 'errorActor')
                     })
                 }
             }

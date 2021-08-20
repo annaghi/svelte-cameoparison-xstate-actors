@@ -2,7 +2,6 @@
     import Error from '../error/Error.svelte';
 
     export let actor = null;
-    export let parent = null;
     const { send } = actor;
 
     $: ({ errorActor } = $actor.context);
@@ -35,14 +34,16 @@
             <button
                 disabled={$actor.matches('loadingCelebs')}
                 class:loading={$actor.matches('loadingCelebs')}
-                on:click={() => send({ type: 'SELECT_CATEGORY', category, parent })}
+                on:click={() => send({ type: 'SELECT_CATEGORY', category })}
             >
                 {category.label}
             </button>
         {/each}
     </div>
 {:else if $actor.matches('failure')}
-    <Error actor={errorActor} />
+    <div class="error-container">
+        <Error actor={errorActor} />
+    </div>
 {/if}
 
 <style>
@@ -81,6 +82,8 @@
     }
     button[disabled] {
         cursor: default;
+        background-color: #888;
+        color: #444;
     }
     .loading {
         background: linear-gradient(
@@ -94,6 +97,12 @@
         );
         animation: bar-animation 3s linear infinite;
         background-size: 64px 64px;
+    }
+    .error-container {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
     }
     @keyframes bar-animation {
         0% {

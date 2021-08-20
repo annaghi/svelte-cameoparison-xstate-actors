@@ -12,7 +12,7 @@ export const feedbackMachine = (results) =>
             idle: {
                 on: {
                     RESTART: {
-                        actions: sendParent({ type: 'RESTART' })
+                        actions: sendParent('RESTART')
                     }
                 }
             }

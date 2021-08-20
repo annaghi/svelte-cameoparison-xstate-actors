@@ -26,7 +26,9 @@ export const machine = createMachine({
             }
         },
         game: {
-            on: { GREET: 'welcome' },
+            on: {
+                GREET: 'welcome'
+            },
             exit: stop('gameActor')
         }
     }

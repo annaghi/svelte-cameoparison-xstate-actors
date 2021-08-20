@@ -2,31 +2,35 @@
     import Welcome from '../welcome/Welcome.svelte';
     import Game from '../game/Game.svelte';
 
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
 
     import { loadImage } from '../utils.js';
 
-    import { useMachine } from '@xstate/svelte';
+    import { interpret } from 'xstate';
     import { machine } from './machine.js';
 
     import { log } from '../logger.js';
 
-    const { state, service } = useMachine(machine);
+    const service = interpret(machine).start();
     log(service);
 
-    $: ({ welcomeActor, gameActor } = $state.context);
+    $: ({ welcomeActor, gameActor } = $service.context);
 
     onMount(() => {
         welcomeActor.send('LOAD_CELEBS');
         loadImage('/icons/right.svg');
         loadImage('/icons/wrong.svg');
     });
+
+    onDestroy(() => {
+        service.stop();
+    });
 </script>
 
 <main>
-    {#if $state.matches('welcome')}
-        <Welcome actor={welcomeActor} parent={service} />
-    {:else if $state.matches('game')}
+    {#if $service.matches('welcome')}
+        <Welcome actor={welcomeActor} />
+    {:else if $service.matches('game')}
         <Game actor={gameActor} />
     {/if}
 </main>
