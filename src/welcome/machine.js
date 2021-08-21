@@ -72,11 +72,12 @@ export const welcomeMachine = createMachine({
                 }
             }
         },
+
         failure: {
             on: {
                 RETRY: 'loadingCelebs'
             },
-            exit: stop('errorActor')
+            exit: [stop('errorActor'), assign({ errorActor: undefined })]
         }
     }
 });
