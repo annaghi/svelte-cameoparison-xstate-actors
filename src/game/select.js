@@ -1,4 +1,4 @@
-import { pickRandom } from '../utils.js';
+import { pickRandom } from '../utils';
 
 function remove(array, index) {
     // if a 'similar' account was picked, there's no

@@ -2,4 +2,4 @@
 /dist/
 /.vscode/
 .DS_Store
-.pnpm-debug.log
+.npm-debug.log

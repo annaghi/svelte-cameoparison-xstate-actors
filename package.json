@@ -1,25 +1,19 @@
 {
-    "name": "xstate-cameoparison-svelte-actors",
-    "description": "The CameoParison app implemented with Svelte (with the store contract) and XState version 4.",
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "serve": "vite preview",
-        "check": "svelte-check --tsconfig ./tsconfig.json"
-    },
-    "devDependencies": {
-        "@sveltejs/vite-plugin-svelte": "^1.0.0-next.19",
-        "@tsconfig/svelte": "^2.0.1",
-        "svelte": "^3.42.2",
-        "svelte-check": "^2.2.4",
-        "svelte-preprocess": "^4.7.4",
-        "tslib": "^2.3.1",
-        "typescript": "^4.3.5",
-        "vite": "^2.5.0"
-    },
-    "dependencies": {
-        "xstate": "^4.23.1"
-    }
+  "name": "svelte-cameoparison-xstate-actors",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.35",
+    "svelte": "^3.46.3",
+    "vite": "^2.7.13"
+  },
+  "dependencies": {
+    "@xstate/inspect": "^0.6.1",
+    "xstate": "^4.28.1"
+  }
 }

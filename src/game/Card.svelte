@@ -13,7 +13,9 @@
 <div class="card-outer">
     <button class="card-inner" style="background-image: url({celeb.image});" on:click={() => dispatch('select')}>
         <div class="details">
-            <h2><a target="_blank" href="https://cameo.com/{celeb.id}">{celeb.name}</a></h2>
+            <h2>
+                <a target="_blank" href="https://cameo.com/{celeb.id}">{celeb.name}</a>
+            </h2>
             <p class="type">{celeb.type}</p>
         </div>
 

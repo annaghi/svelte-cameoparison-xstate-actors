@@ -4,12 +4,12 @@
 
     import { onMount, onDestroy } from 'svelte';
 
-    import { loadImage } from '../utils.js';
-
     import { interpret } from 'xstate';
-    import { machine } from './machine.js';
 
+    import { loadImage } from '../utils.js';
     import { log } from '../logger.js';
+
+    import { machine } from './machine.js';
 
     const service = interpret(machine).start();
     log(service);
@@ -17,7 +17,6 @@
     $: ({ welcomeActor, gameActor } = $service.context);
 
     onMount(() => {
-        welcomeActor.send('LOAD_CELEBS');
         loadImage('/icons/right.svg');
         loadImage('/icons/wrong.svg');
     });

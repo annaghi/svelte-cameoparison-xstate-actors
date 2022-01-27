@@ -7,7 +7,6 @@
     export let actor;
 
     $: ({ results } = $actor.context);
-
     $: score = results.filter((x) => x === 'right').length;
 
     const pickMessage = (p) => {

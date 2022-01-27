@@ -1,8 +1,8 @@
 import { actions, assign, createMachine, spawn } from 'xstate';
 const { stop } = actions;
 
-import { welcomeMachine } from '../welcome/machine.js';
-import { gameMachine } from '../game/machine.js';
+import { welcomeMachine } from '../welcome/machine';
+import { gameMachine } from '../game/machine';
 
 export const machine = createMachine({
     id: 'appMachine',
@@ -31,6 +31,11 @@ export const machine = createMachine({
         }
     },
 
-    entry: assign({ welcomeActor: (context, event) => spawn(welcomeMachine, 'welcomeActor') }),
-    exit: [stop('welcomeActor'), assign({ welcomeActor: undefined })]
+    entry: assign({
+        welcomeActor: (context, event) => spawn(welcomeMachine, 'welcomeActor')
+    }),
+
+    exit: [stop('welcomeActor'), assign({ welcomeActor: undefined })],
+
+    preserveActionOrder: true
 });

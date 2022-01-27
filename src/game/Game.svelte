@@ -3,24 +3,17 @@
     import Feedback from '../feedback/Feedback.svelte';
     import Error from '../error/Error.svelte';
 
-    import { onMount } from 'svelte';
-
     import { fly, crossfade } from 'svelte/transition';
     import { cubicOut } from 'svelte/easing';
 
     export let actor;
 
     $: ({ currentRound, results, currentResult, feedbackActor, errorActor } = $actor.context);
-
     $: [a, b] = currentRound;
 
     const [sendFade, receiveFade] = crossfade({
         easing: cubicOut,
         duration: 300
-    });
-
-    onMount(() => {
-        actor.send('LOAD_ROUNDS');
     });
 </script>
 
@@ -32,7 +25,7 @@
 
 <div class="game-container">
     {#if $actor.matches('question') || $actor.matches('answer') || $actor.matches('next')}
-        <div in:fly={{ duration: 300, y: 40 }} out:fly={{ duration: 300, y: -40 }} class="game">
+        <div in:fly={{ duration: 300, y: 20 }} out:fly={{ duration: 300, y: -20 }} class="game">
             <div class="card-container">
                 <Card
                     celeb={a}

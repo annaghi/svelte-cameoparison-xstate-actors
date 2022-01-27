@@ -4,7 +4,7 @@ const { stop } = actions;
 import { feedbackMachine } from '../feedback/machine.js';
 import { errorMachine } from '../error/machine.js';
 
-import { ROUNDS_PER_GAME } from '../constants.js';
+import { ROUNDS_PER_GAME } from './constants.js';
 import { select } from './select.js';
 import { loadImage } from '../utils.js';
 
@@ -34,13 +34,8 @@ export const gameMachine = ({ celebs, lookup, category }) =>
             errorActor: undefined
         },
 
-        initial: 'idle',
+        initial: 'loadingRounds',
         states: {
-            idle: {
-                on: {
-                    LOAD_ROUNDS: 'loadingRounds'
-                }
-            },
             loadingRounds: {
                 invoke: {
                     src: (context, event) =>
@@ -115,10 +110,9 @@ export const gameMachine = ({ celebs, lookup, category }) =>
             feedback: {
                 on: {
                     RESTART: {
-                        actions: sendParent('GREET')
+                        actions: [stop('feedbackActor'), assign({ feedbackActor: undefined }), sendParent('GREET')]
                     }
-                },
-                exit: [stop('feedbackActor'), assign({ feedbackActor: undefined })]
+                }
             },
 
             failure: {
