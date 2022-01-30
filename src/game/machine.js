@@ -61,6 +61,22 @@ export const gameMachine = ({ celebs, lookup, category }) =>
                     }
                 }
             },
+            healingRounds: {
+                invoke: {
+                    src: (context, event) =>
+                        loadRounds(select(context.celebs, context.lookup, context.category.slug, 1)),
+                    onDone: {
+                        target: 'loadingRound',
+                        actions: assign({
+                            rounds: (context, event) => [
+                                ...context.rounds.slice(0, context.currentRoundIndex),
+                                event.data[0],
+                                ...context.rounds.slice(context.currentRoundIndex + 1)
+                            ]
+                        })
+                    }
+                }
+            },
             question: {
                 on: {
                     ATTEMPT: {
@@ -117,7 +133,7 @@ export const gameMachine = ({ celebs, lookup, category }) =>
 
             failure: {
                 on: {
-                    RETRY: 'loadingRounds'
+                    RETRY: 'healingRounds'
                 },
                 exit: [stop('errorActor'), assign({ errorActor: undefined })]
             }

@@ -12,7 +12,7 @@ function remove(array, index) {
     array.pop();
 }
 
-export function select(celebs, lookup, category, ROUNDS_PER_GAME) {
+export function select(celebs, lookup, category, how_many) {
     const filtered = celebs.filter((c) => {
         return c.categories.includes(category);
     });
@@ -20,7 +20,7 @@ export function select(celebs, lookup, category, ROUNDS_PER_GAME) {
     const seen = new Set();
     const selection = [];
 
-    let i = ROUNDS_PER_GAME;
+    let i = how_many;
     while (i--) {
         const n = Math.random();
         const ai = Math.floor(n * filtered.length);
