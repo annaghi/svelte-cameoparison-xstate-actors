@@ -2,7 +2,6 @@ import { actions, assign, createMachine, sendParent, spawn } from 'xstate';
 const { stop } = actions;
 
 import { feedbackMachine } from '../feedback/machine.js';
-import { errorMachine } from '../error/machine.js';
 
 import { ROUNDS_PER_GAME } from './constants.js';
 import { select } from './select.js';
@@ -30,8 +29,7 @@ export const gameMachine = ({ celebs, lookup, category }) =>
             currentRoundIndex: 0,
             results: Array(ROUNDS_PER_GAME),
             currentResult: undefined,
-            feedbackActor: undefined,
-            errorActor: undefined
+            feedbackActor: undefined
         },
 
         initial: 'loadingRounds',
@@ -54,10 +52,7 @@ export const gameMachine = ({ celebs, lookup, category }) =>
                         actions: assign({ currentRound: (context, event) => event.data })
                     },
                     onError: {
-                        target: 'failure',
-                        actions: assign({
-                            errorActor: (context, event) => spawn(errorMachine, 'errorActor')
-                        })
+                        target: 'healingRounds'
                     }
                 }
             },
@@ -129,13 +124,6 @@ export const gameMachine = ({ celebs, lookup, category }) =>
                         actions: [stop('feedbackActor'), assign({ feedbackActor: undefined }), sendParent('GREET')]
                     }
                 }
-            },
-
-            failure: {
-                on: {
-                    RETRY: 'healingRounds'
-                },
-                exit: [stop('errorActor'), assign({ errorActor: undefined })]
             }
         }
     });
