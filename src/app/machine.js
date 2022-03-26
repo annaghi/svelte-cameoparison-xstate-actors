@@ -25,7 +25,7 @@ export const machine = createMachine({
         },
         game: {
             on: {
-                GREET: 'welcome'
+                GREET: { target: 'welcome' }
             },
             exit: [stop('gameActor'), assign({ gameActor: undefined })]
         }

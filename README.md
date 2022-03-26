@@ -17,4 +17,6 @@ You can check out the [course on Frontend Masters](https://frontendmasters.com/c
 
 ## Actor-model
 
+Game -> Error is not implemented yet.
+
 ![](cameoparison-actor-model.png)

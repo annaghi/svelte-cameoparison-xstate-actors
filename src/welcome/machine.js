@@ -72,7 +72,7 @@ export const welcomeMachine = createMachine({
         },
         failure: {
             on: {
-                RETRY: 'loadingCelebs'
+                RETRY: { target: 'loadingCelebs' }
             },
             exit: [stop('errorActor'), assign({ errorActor: undefined })]
         }
