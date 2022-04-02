@@ -2,13 +2,14 @@
     import Card from './Card.svelte';
     import CardSkeleton from './CardSkeleton.svelte';
     import Feedback from '../feedback/Feedback.svelte';
+    import Error from '../error/Error.svelte';
 
     import { fly, crossfade } from 'svelte/transition';
     import { cubicOut } from 'svelte/easing';
 
     export let actor;
 
-    $: ({ currentRound, results, currentResult, feedbackActor } = $actor.context);
+    $: ({ currentRound, results, currentResult, feedbackActor, errorActor } = $actor.context);
     $: [a, b] = currentRound;
 
     const [sendFade, receiveFade] = crossfade({
@@ -60,6 +61,10 @@
         {/if}
     {:else if $actor.matches('feedback')}
         <Feedback actor={feedbackActor} />
+    {:else if $actor.matches('failure')}
+        <div class="error-container">
+            <Error actor={errorActor} />
+        </div>
     {:else}
         <div class="game">
             <div class="card-container">
@@ -149,6 +154,16 @@
         left: 0;
         top: 0;
     }
+
+    .error-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
     @media (min-width: 640px) {
         .game {
             max-width: 100%;

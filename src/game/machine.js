@@ -2,6 +2,7 @@ import { actions, assign, createMachine, sendParent, spawn } from 'xstate';
 const { stop } = actions;
 
 import { feedbackMachine } from '../feedback/machine.js';
+import { errorMachine } from '../error/machine.js';
 
 import { ROUNDS_PER_GAME } from './constants.js';
 import { select } from './select.js';
@@ -29,7 +30,9 @@ export const gameMachine = ({ celebs, lookup, category }) =>
             currentRoundIndex: 0,
             results: Array(ROUNDS_PER_GAME),
             currentResult: undefined,
-            feedbackActor: undefined
+            feedbackActor: undefined,
+            errorActor: undefined,
+            retries: 0
         },
 
         initial: 'loadingRounds',
@@ -51,9 +54,20 @@ export const gameMachine = ({ celebs, lookup, category }) =>
                         target: 'question',
                         actions: assign({ currentRound: (context, event) => event.data })
                     },
-                    onError: {
-                        target: 'healingRounds'
-                    }
+                    onError: [
+                        {
+                            cond: (context, event) => context.retries < 3,
+                            target: 'healingRounds',
+                            actions: assign({ retries: (context, event) => context.retries + 1 })
+                        },
+                        {
+                            target: 'failure',
+                            actions: assign({
+                                errorActor: (context, event) => spawn(errorMachine, 'errorActor'),
+                                retries: 0
+                            })
+                        }
+                    ]
                 }
             },
             healingRounds: {
@@ -124,6 +138,13 @@ export const gameMachine = ({ celebs, lookup, category }) =>
                         actions: [stop('feedbackActor'), assign({ feedbackActor: undefined }), sendParent('GREET')]
                     }
                 }
+            },
+
+            failure: {
+                on: {
+                    RETRY: 'loadingRounds'
+                },
+                exit: [stop('errorActor'), assign({ errorActor: undefined })]
             }
         }
     });
