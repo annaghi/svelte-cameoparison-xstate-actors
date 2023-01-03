@@ -1,6 +1,6 @@
 # Svelte CameoParison example - XState Actors
 
-[Open in CodeSandbox](https://codesandbox.io/embed/github/annaghi/svelte-cameoparison-xstate-actors)
+[Vercel App](https://svelte-cameoparison-xstate-actors.vercel.app/)
 
 This is an XState port of [Rich-Harris/cameoparison-starter](https://github.com/Rich-Harris/cameoparison-starter).
 You can check out the [course on Frontend Masters](https://frontendmasters.com/courses/svelte/building-an-application-frame/).
